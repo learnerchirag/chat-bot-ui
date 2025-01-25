@@ -62,6 +62,10 @@ body {
   }
 }
 
+.bg-background {
+  background-color: hsl(var(--background));
+}
+
 @layer base {
   * {
     @apply border-border;
