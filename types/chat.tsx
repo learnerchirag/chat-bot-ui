@@ -9,6 +9,13 @@ export interface Message {
   isEditing?: boolean
 }
 
+export interface Conversation {
+  id: string
+  created_at: string
+  session_id: string
+  messages: Message[]
+}
+
 export interface Action {
   label: string
   onClick: () => void
