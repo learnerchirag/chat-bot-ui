@@ -27,7 +27,7 @@ export function InputBar({ value, onChange, onSend, onSettingsClick }: InputBarP
         <div>Context</div>
         <div className="flex-1 items-center">
           <Select defaultValue="onboarding">
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-[180px] py-1 h-auto">
               <SelectValue placeholder="Select context" />
             </SelectTrigger>
             <SelectContent>

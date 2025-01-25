@@ -18,7 +18,7 @@ const botUser: User = {
   id: "bot",
   name: "Ava",
   avatar:
-    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-01-22%20at%201.30.46%E2%80%AFPM-EEU6RMnxVCjEWvW1XqEWctveQWZY7V.png",
+    "https://www.startupsuccessstories.in/wp-content/uploads/2019/07/HireXP-launches-Amara-an-embodied-conversational-Chatbot-in-India.png",
   initials: "AV",
 }
 
@@ -39,9 +39,11 @@ export function ChatWidget({ isOpen, onClose }: ChatWidgetProps) {
   return (
     <div
       className={cn(
-        "fixed bottom-20 right-4 flex flex-col h-[600px] w-[400px] bg-background rounded-3xl shadow-lg",
+        "fixed bottom-20 md:right-4 flex flex-col bg-background rounded-3xl shadow-lg",
         "transition-all duration-300 ease-in-out",
         isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none",
+        "w-screen md:w-[400px]",
+        "h-[calc(100vh-120px)] md:h-[800px]"
       )}
     >
       <Header user={botUser} onClose={onClose} />
