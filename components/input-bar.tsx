@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Avatar } from "./avatar"
+import { Textarea } from "./ui/textarea"
 
 interface InputBarProps {
   value: string
@@ -16,15 +17,24 @@ export function InputBar({ value, onChange, onSend, onSettingsClick }: InputBarP
     <div className="p-4 border-t">
       <div className="flex gap-2 mb-2">
         <Avatar initials="CA" />
-        <Input
+        <Textarea
           placeholder="Type your question"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="flex-grow border-none"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !(e.shiftKey || e.metaKey)) {
+              e.preventDefault();
+              onSend();
+            } else if (e.key === 'Enter' && e.shiftKey) {
+              onChange(value + '\n');
+              e.preventDefault();
+            }
+          }}
+          className="flex-grow border-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0 resize-none min-h-1"
         />
       </div>
       <div className="flex items-center gap-2">
-        <div>Context</div>
+        <p>Context</p>
         <div className="flex-1 items-center">
           <Select defaultValue="onboarding">
             <SelectTrigger className="w-[180px] py-1 h-auto">

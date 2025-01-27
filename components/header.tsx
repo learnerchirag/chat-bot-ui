@@ -11,10 +11,10 @@ interface HeaderProps {
 export function Header({ user, onClose }: HeaderProps) {
   return (
     <div className="items-center justify-between p-4 border-b">
-      <div className="flex gap-2 mb-4 justify-between">
-        <Button variant="ghost" size="icon" onClick={() => console.log("resize")}>
+      <div className="flex gap-2 mb-4 justify-end">
+        {/* <Button variant="ghost" size="icon" onClick={() => console.log("resize")}>
           <Maximize2 className="h-4 w-4" />
-        </Button>
+        </Button> */}
         <Button variant="ghost" size="icon" onClick={onClose}>
           <X className="h-4 w-4" />
         </Button>

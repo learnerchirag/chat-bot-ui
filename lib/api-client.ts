@@ -8,6 +8,7 @@ import type {
   Conversation,
   MessageUpdateRequest,
   StatusResponse,
+  ConversationMessageSend,
 } from "../types/api"
 
 class ApiClient {
@@ -46,7 +47,7 @@ class ApiClient {
 
   async sendMessage(
     sessionId: string,
-    message: ConversationMessage,
+    message: ConversationMessageSend,
   ): Promise<{ user_message: ConversationMessage; bot_response: ConversationMessage }> {
     const response = await this.client.post<{ user_message: ConversationMessage; bot_response: ConversationMessage }>(
       `/conversations/${sessionId}/message`,

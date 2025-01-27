@@ -31,8 +31,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (storedUser && storedSession) {
         const parsedUser = JSON.parse(storedUser) as UserResponse
         const parsedSession = JSON.parse(storedSession) as SessionResponse
-
-        if (new Date(parsedSession.expires_at) > new Date()) {
+        if (new Date(parsedSession.expires_at+"Z") > new Date()) {
           setUser(parsedUser)
           setSession(parsedSession)
         } else {

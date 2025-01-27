@@ -1,16 +1,15 @@
-import { useState, useEffect, useCallback } from "react"
-import { type ConversationMessage, type Conversation, MessageRole } from "@/types/api"
+import { useState, useEffect, useCallback, useRef } from "react"
+import { type ConversationMessage, type Conversation, MessageRole, ConversationMessageSend } from "@/types/api"
 import { useAuth } from "@/contexts/AuthContext"
 import apiClient from "@/lib/api-client"
-interface ExtendedConversationMessage extends ConversationMessage {
-  id: string
-}
+import { Message } from "@/types/chat"
 
 export function useConversation() {
-  const [messages, setMessages] = useState<ExtendedConversationMessage[]>([])
+  const [messages, setMessages] = useState<Message[]>([])
   const [inputValue, setInputValue] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const messagesEndRef = useRef<HTMLDivElement | null>(null)
 
   const { session } = useAuth()
 
@@ -23,7 +22,7 @@ export function useConversation() {
     try {
       const data = await apiClient.getConversation(session.session_id)
       if (data) {
-        setMessages(data.messages.map((msg, index) => ({ ...msg, id: `msg-${index}` })))
+        setMessages(data.messages)
       }
     } catch (err) {
       setError("Failed to fetch conversation")
@@ -35,28 +34,36 @@ export function useConversation() {
 
   useEffect(() => {
     fetchConversation()
-  }, [fetchConversation])
+  }, [session])
 
   const sendMessage = useCallback(
     async (content: string) => {
       if (!session) return
 
-      const userMessage: ExtendedConversationMessage = {
-        id: `msg-${Date.now()}`,
+      const userMessage: Message = {
+        id: "temp"+ Date.now(),
         role: MessageRole.USER,
         content,
       }
       setMessages((prevMessages) => [...prevMessages, userMessage])
 
       try {
-        const response = await apiClient.sendMessage(session.session_id, userMessage)
+        const messageReqObject: ConversationMessageSend = {
+          role: MessageRole.USER,
+          content: content
+        } 
+        const response = await apiClient.sendMessage(session.session_id, messageReqObject)
 
-        const botMessage: ExtendedConversationMessage = {
-          id: `msg-${Date.now() + 1}`,
-          role: MessageRole.BOT,
-          content: response.bot_response.content,
-        }
-        setMessages((prevMessages) => [...prevMessages, botMessage])
+        const botMessage: Message = response.bot_response
+        setMessages((prevMessages) => {
+          const updatedMessages = prevMessages.map((msg) => {
+            if (msg.id === userMessage.id) {
+              return { ...msg, id: response.user_message.id };
+            }
+            return msg;
+          });
+          return [...updatedMessages, botMessage]
+        })
       } catch (err) {
         setError("Failed to send message")
         console.error(err)
@@ -91,6 +98,12 @@ export function useConversation() {
     setInputValue("")
   }, [inputValue, sendMessage])
 
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
+    }
+  }, [messages])
+
   return {
     messages,
     inputValue,
@@ -101,6 +114,7 @@ export function useConversation() {
     handleInputChange,
     handleSend,
     fetchConversation,
+    messagesEndRef
   }
 }
 

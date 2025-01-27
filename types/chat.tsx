@@ -1,12 +1,11 @@
-export type MessageType = "user" | "bot"
+export type MessageType = "user" | "assistant"
 
 export interface Message {
   id: string
   content: string
-  type: MessageType
-  timestamp: Date
-  actions?: Action[]
-  isEditing?: boolean
+  role: MessageType
+  timestamp?: string
+  session_id?: string
 }
 
 export interface Conversation {

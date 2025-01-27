@@ -1,6 +1,6 @@
 export enum MessageRole {
  USER = "user",
- BOT = "bot",
+ BOT = "assistant",
 }
 
 export interface UserCreate {
@@ -28,8 +28,16 @@ export interface SessionResponse {
 }
 
 export interface ConversationMessage {
+ id: string
+ session_id: string
  role: MessageRole
+ content: string,
+ timestamp: string
+}
+
+export interface ConversationMessageSend {
  content: string
+ role: MessageRole
 }
 
 export interface ConversationCreate {

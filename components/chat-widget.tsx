@@ -32,6 +32,7 @@ export function ChatWidget({ isOpen, onClose }: ChatWidgetProps) {
     updateMessage,
     handleInputChange,
     handleSend,
+    messagesEndRef
   } = useConversation()
 
   const isLoading = authLoading || conversationLoading
@@ -43,7 +44,7 @@ export function ChatWidget({ isOpen, onClose }: ChatWidgetProps) {
         "transition-all duration-300 ease-in-out",
         isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none",
         "w-screen md:w-[400px]",
-        "h-[calc(100vh-120px)] md:h-[800px]"
+        "h-[calc(100vh-120px)]"
       )}
     >
       <Header user={botUser} onClose={onClose} />
@@ -59,20 +60,18 @@ export function ChatWidget({ isOpen, onClose }: ChatWidgetProps) {
         ) : !user ? (
           <LoginForm />
         ) : (
-          messages.map((message, index) => (
-            <Message
-              key={index}
-              message={{
-                id: index.toString(),
-                content: message.content,
-                type: message.role === "user" ? "user" : "bot",
-                timestamp: new Date(),
-              }}
-              user={botUser}
-              onDelete={() => {}}
-              onEdit={(id, content) => updateMessage(id, content)}
-            />
-          ))
+          <>
+            {messages.map((message, index) => (
+              <Message
+                key={index}
+                message={message}
+                user={botUser}
+                onDelete={() => {}}
+                onEdit={(id, content) => updateMessage(id, content)}
+              />
+            ))}
+            <div ref={messagesEndRef} />
+          </>
         )}
       </div>
       {user && (
