@@ -30,6 +30,7 @@ export function ChatWidget({ isOpen, onClose }: ChatWidgetProps) {
     isLoading: conversationLoading,
     error,
     updateMessage,
+    deleteMessage,
     handleInputChange,
     handleSend,
     messagesEndRef
@@ -66,7 +67,7 @@ export function ChatWidget({ isOpen, onClose }: ChatWidgetProps) {
                 key={index}
                 message={message}
                 user={botUser}
-                onDelete={() => {}}
+                onDelete={deleteMessage}
                 onEdit={(id, content) => updateMessage(id, content)}
               />
             ))}

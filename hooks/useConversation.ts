@@ -87,6 +87,21 @@ export function useConversation() {
     [session],
   )
 
+  const deleteMessage = useCallback(
+    async (messageId: string) => {
+      if (!session) return
+
+      try {
+        await apiClient.deleteMessage(session.session_id, messageId)
+        setMessages((prevMessages) => prevMessages.filter((msg) => msg.id !== messageId))
+      } catch (err) {
+        setError("Failed to delete message")
+        console.error(err)
+      }
+    },
+    [session],
+  )
+
   const handleInputChange = useCallback((value: string) => {
     setInputValue(value)
   }, [])
@@ -111,6 +126,7 @@ export function useConversation() {
     error,
     sendMessage,
     updateMessage,
+    deleteMessage,
     handleInputChange,
     handleSend,
     fetchConversation,

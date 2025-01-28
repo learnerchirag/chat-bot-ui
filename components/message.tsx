@@ -7,6 +7,7 @@ import type {Message as MessageObjType, User} from "../types/chat";
 import ReactMarkdown from "react-markdown";
 import {Textarea} from "./ui/textarea";
 import { MessageRole } from "@/types/api";
+import { ConfirmationModal } from "./confirmation-modal";
 
 interface MessageProps {
   message: MessageObjType;
@@ -18,6 +19,7 @@ interface MessageProps {
 export function Message({message, user, onDelete, onEdit}: MessageProps) {
   const [editContent, setEditContent] = useState(message.content);
   const [isEditing, toggleEditing] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const isBot = message.role === MessageRole.BOT;
 
   useEffect(() => {
@@ -28,6 +30,10 @@ export function Message({message, user, onDelete, onEdit}: MessageProps) {
   const handleSaveEdit = () => {
     onEdit(message.id, editContent);
   };
+  const confirmDelete = () => {
+    onDelete(message.id)
+    setIsDeleteModalOpen(false)
+  }
 
   return (
     <div className={`flex gap-3 ${isBot ? "flex-row" : "flex-row-reverse"}`}>
@@ -111,7 +117,7 @@ export function Message({message, user, onDelete, onEdit}: MessageProps) {
                   className="rounded-full w-8 h-8"
                   size="icon"
                   variant="ghost"
-                  onClick={() => onDelete(message.id)}
+                  onClick={() => setIsDeleteModalOpen(true)}
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -120,6 +126,13 @@ export function Message({message, user, onDelete, onEdit}: MessageProps) {
           </div>
         )}
       </div>
+      <ConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={confirmDelete}
+        title="Delete Message"
+        description="Are you sure you want to delete this message? This action cannot be undone."
+      />
     </div>
   );
 }

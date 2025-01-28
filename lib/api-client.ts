@@ -63,6 +63,10 @@ class ApiClient {
     )
     return response.data
   }
+  async deleteMessage(sessionId: string, messageId: string): Promise<StatusResponse> {
+    const response = await this.client.delete<StatusResponse>(`/conversations/${sessionId}/message/${messageId}`)
+    return response.data
+  }
 }
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api/v1"
